@@ -57,4 +57,4 @@ jobs:
 
       # Deploy
       - name: Deploy
-        run: aws deploy create-deployment --application-name photorage-codedeploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name photorage-backend --s3-location bucket=photorage-deploy,bundleType=zip,key=feature-issue#1.zip
+        run: aws deploy create-deployment --application-name photorage-codedeploy  --deployment-group-name photorage-backend --s3-location bucket=photorage-deploy,bundleType=zip,key=feature-issue#1.zip
