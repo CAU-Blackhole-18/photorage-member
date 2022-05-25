@@ -62,20 +62,3 @@ jobs:
       # Deploy
       - name: Deploy
         run: aws deploy create-deployment --application-name photorage-codedeploy  --deployment-group-name photorage-backend --s3-location bucket=photorage-deploy,bundleType=zip,key=feature-issue#1.zip
-        
-            DEPLOYMENT_ID=$(cat deploymentId.txt | jq -r '.deploymentId')
-            
-            echo "Wait 60 seconds for deployment and test"
-            sleep 60
-            
-            IS_SUCCESS=$(aws deploy get-deployment --deployment-id $DEPLOYMENT_ID | jq -r '.deploymentInfo.status')
-            
-            echo $IS_SUCCESS;
-            
-            if [ "$IS_SUCCESS" = "Succeeded" ];
-            then
-            echo "SUCCESS DEPLOY!"
-            else
-            echo "FAIL DEPLOY!"
-            exit 1
-            fi
