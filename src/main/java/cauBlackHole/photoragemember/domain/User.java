@@ -12,7 +12,7 @@ public class User {
     private Long id;
 
     @NotEmpty
-    private String email; //로그인 이메일
+    private String email; //로그인  이메일
     @NotEmpty
     private String name; //사용자 이름
     @NotEmpty
