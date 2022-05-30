@@ -1,4 +1,4 @@
-package cauBlackHole.photoragemember.domain.DTO;
+package cauBlackHole.photoragemember.application.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

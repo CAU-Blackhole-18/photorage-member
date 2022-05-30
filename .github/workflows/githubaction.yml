@@ -2,11 +2,9 @@ name: CI/CD
 on:
   push: # feature/*와 develop 브랜치에서 push가 일어났을 때 github action 동작
     branches:
-      - 'feature/*'
       - 'develop'
   pull_request: # feature/*와 develop 브랜치에서 PR이 일어났을 때 github action 동작
     branches:
-      - 'feature/*'
       - 'develop'
   workflow_dispatch:
 
@@ -18,7 +16,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v1
         with:
           java-version: 11
 
@@ -40,16 +38,20 @@ jobs:
       - name: Copy Jar
         run: cp ./build/libs/*.jar ./deploy/
 
+      # appspec.yml Copy
+      - name: Copy appspec
+        run: cp appspec.yml ./deploy/
+
       # 압축파일 형태로 전달
       - name: Make zip file
-        run: zip -r -qq -j feature-issue#1./.zip ./deploy
+        run: zip -r -qq -j ./feature-issue#1.zip ./deploy
 
       # S3 Bucket으로 copy
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
       - name: Upload to S3
@@ -57,4 +59,4 @@ jobs:
 
       # Deploy
       - name: Deploy
-        run: aws deploy create-deployment --application-name photorage-codedeploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name photorage-backend --s3-location bucket=photorage-deploy,bundleType=zip,key=feature-issue#1.zip
+        run: aws deploy create-deployment --application-name photorage-codedeploy  --deployment-group-name photorage-backend --s3-location bucket=photorage-deploy,bundleType=zip,key=feature-issue#1.zip
