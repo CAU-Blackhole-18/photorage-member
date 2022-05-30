@@ -14,7 +14,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService implements UserServiceUseCase {
     private final UserRepository userRepository;
-
     public String signIn(UserSignInDto userSignInDto){
 
         Optional<User> findUser = userRepository.findByEmail(userSignInDto.getEmail());
