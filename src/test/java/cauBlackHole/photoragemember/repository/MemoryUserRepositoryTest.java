@@ -1,7 +1,8 @@
 package cauBlackHole.photoragemember.repository;
 
 import cauBlackHole.photoragemember.domain.User;
-import org.assertj.core.api.Assertions;
+import cauBlackHole.photoragemember.adapter.persistence.MemoryUserRepository;
+import cauBlackHole.photoragemember.application.port.out.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class MemoryUserRepositoryTest {
 

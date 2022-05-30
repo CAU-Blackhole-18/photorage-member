@@ -2,11 +2,9 @@ name: CI/CD
 on:
   push: # feature/*와 develop 브랜치에서 push가 일어났을 때 github action 동작
     branches:
-      - 'feature/*'
       - 'develop'
   pull_request: # feature/*와 develop 브랜치에서 PR이 일어났을 때 github action 동작
     branches:
-      - 'feature/*'
       - 'develop'
   workflow_dispatch:
 

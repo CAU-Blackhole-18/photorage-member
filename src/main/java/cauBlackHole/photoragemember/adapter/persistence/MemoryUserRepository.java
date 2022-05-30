@@ -1,5 +1,6 @@
-package cauBlackHole.photoragemember.repository;
+package cauBlackHole.photoragemember.adapter.persistence;
 
+import cauBlackHole.photoragemember.application.port.out.UserRepository;
 import cauBlackHole.photoragemember.domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
