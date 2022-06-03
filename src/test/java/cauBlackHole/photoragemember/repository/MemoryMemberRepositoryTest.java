@@ -1,8 +1,5 @@
 package cauBlackHole.photoragemember.repository;
 
-import cauBlackHole.photoragemember.domain.User;
-import cauBlackHole.photoragemember.adapter.persistence.MemoryUserRepository;
-import cauBlackHole.photoragemember.application.port.out.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,9 +8,11 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
-class MemoryUserRepositoryTest {
+class MemoryMemberRepositoryTest {
 
+    /*
     private UserRepository userRepository = new MemoryUserRepository();
+
 
     @AfterEach
     void afterEach(){
@@ -93,5 +92,5 @@ class MemoryUserRepositoryTest {
         Optional<User> findUsers = userRepository.findByEmail("woosuk@naver.com");
 
         assertThat(findUsers.get()).isEqualTo(user);
-    }
+    }*/
 }

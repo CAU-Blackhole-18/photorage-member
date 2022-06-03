@@ -1,18 +1,10 @@
 package cauBlackHole.photoragemember.adapter.persistence;
 
-import cauBlackHole.photoragemember.application.port.out.UserRepository;
-import cauBlackHole.photoragemember.domain.User;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Repository;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
-@Repository
+/*@Repository
 @Slf4j
 public class MemoryUserRepository implements UserRepository {
 
-    private static Map<Long, User> store = new HashMap<>();
+    private static Map<Long, Member> store = new HashMap<>();
     private static long sequence = 0L;
 
     @Override
@@ -21,7 +13,7 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User save(User user) {
+    public Member save(Member user) {
         user.setId(++sequence);
         log.info("save: user = {}", user);
         store.put(user.getId(), user);
@@ -29,14 +21,14 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public void delete(User user) {
+    public void delete(Member user) {
         log.info("delete : user={}", user);
         store.remove(user.getId());
     }
 
     @Override
-    public Optional<User> findById(Long id) {
-        Optional<User> user = Optional.ofNullable(store.get(id));
+    public Optional<Member> findById(Long id) {
+        Optional<Member> user = Optional.ofNullable(store.get(id));
         if(user.isPresent()){
             log.info("findById : user = {}", user.get());
         }
@@ -47,14 +39,14 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public List<User> findAll() {
+    public List<Member> findAll() {
         log.info("findAll : users = {}", store.values());
         return new ArrayList<>(store.values());
     }
 
     @Override
-    public List<User> findByName(String name) {
-        List<User> findUsers = findAll().stream().
+    public List<Member> findByName(String name) {
+        List<Member> findUsers = findAll().stream().
                 filter(member -> member.getName().equals(name)).
                 collect(Collectors.toList());
         log.info("find by name = {}", findUsers);
@@ -62,8 +54,8 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findByEmail(String email) {
-        Optional<User> findUser = findAll().stream().
+    public Optional<Member> findByEmail(String email) {
+        Optional<Member> findUser = findAll().stream().
                 filter(member -> member.getEmail().equals(email)).
                 findFirst();
 
@@ -75,4 +67,4 @@ public class MemoryUserRepository implements UserRepository {
         }
         return findUser;
     }
-}
+}*/

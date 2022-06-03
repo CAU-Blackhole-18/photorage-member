@@ -4,6 +4,9 @@
 *.pdf
 *.xlsx
 application.properties
+application.yml
+application-jwt.yml
+data.sql
 ### IntelliJ IDEA ###
 .idea
 *.iws
