@@ -6,12 +6,10 @@ import cauBlackHole.photoragemember.application.DTO.member.MemberRequestSignUpDt
 import cauBlackHole.photoragemember.application.DTO.member.MemberResponseDto;
 import cauBlackHole.photoragemember.application.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,19 +20,26 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/sign-up")
+    @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<MemberResponseDto> signUp(@RequestBody @Validated MemberRequestSignUpDto memberRequestDto) {
-        return ResponseEntity.ok(authService.signUp(memberRequestDto));
+        return ResponseEntity.ok(this.authService.signUp(memberRequestDto));
     }
 
     @PostMapping("/sign-in")
+    @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<JwtTokenDto> signIn(@RequestBody @Validated MemberRequestSignInDto memberRequestDto) {
 
-        return ResponseEntity.ok(authService.signIn(memberRequestDto));
+        return ResponseEntity.ok(this.authService.signIn(memberRequestDto));
+    }
+
+    @PostMapping("/logout")
+    @ResponseStatus(value = HttpStatus.OK)
+    public String logout(@RequestBody JwtTokenRequestDto jwtTokenRequestDto){
+        return this.authService.logout(jwtTokenRequestDto);
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<JwtTokenDto> reissue(@RequestBody JwtTokenRequestDto tokenRequestDto, HttpServletRequest request) {
-        request.setAttribute("reissue", true);
-        return ResponseEntity.ok(authService.reissue(tokenRequestDto, request));
+    public ResponseEntity<JwtTokenDto> reissue(@RequestBody JwtTokenRequestDto jwtTokenRequestDto) {
+        return ResponseEntity.ok(this.authService.reissue(jwtTokenRequestDto));
     }
 }

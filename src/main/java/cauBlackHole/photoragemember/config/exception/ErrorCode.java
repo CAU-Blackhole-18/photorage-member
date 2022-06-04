@@ -26,8 +26,9 @@ public enum ErrorCode {
     /**
      * 403 Forbidden
      */
+    NOT_ADMIN("ME012"),
     PAUSE_USER("ME009"),
-    BAN_USER("ME010"),
+    DELETE_USER("ME010"),
 
     /**
      * 404 Not Found

@@ -25,7 +25,6 @@ import java.util.Collections;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final MemberPort memberPort;
-    private final MemberRepository memberRepository;
 
     @Override
     @Transactional
@@ -36,7 +35,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER, "데이터베이스에 유저를 찾을 수 없습니다."));
     }
 
-    // DB 에 User 값이 존재한다면 UserDetails 객체로 만들어서 리턴
+    // DB 에 User 값이 존재한다면 UserDetails 객체로 만들어서 리턴(authenticate.getName() -> Id)
     private UserDetails createUserDetails(MemberDomainModel memberDomainModel) {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(memberDomainModel.getAuthority().toString());
 

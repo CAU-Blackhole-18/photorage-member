@@ -58,8 +58,9 @@ public class JwtTokenProvider {
                 .compact();
 
         // Refresh Token 생성
+        Date refreshTokenExpiresIn = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
         String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
+                .setExpiration(refreshTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
@@ -68,7 +69,16 @@ public class JwtTokenProvider {
                 .accessToken(accessToken)
                 .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
                 .refreshToken(refreshToken)
+                .refreshTokenExpiresIn(refreshTokenExpiresIn.getTime())
                 .build();
+    }
+
+    public Long getExpiration(String accessToken) {
+        // accessToken 남은 유효시간
+        Date expiration = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody().getExpiration();
+        // 현재 시간
+        Long now = new Date().getTime();
+        return (expiration.getTime() - now);
     }
 
     public Authentication getAuthentication(String accessToken) {
@@ -91,7 +101,7 @@ public class JwtTokenProvider {
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 
-    public boolean validateToken(String token, HttpServletRequest request) {
+    public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
@@ -103,13 +113,6 @@ public class JwtTokenProvider {
             log.info("지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {
             log.info("JWT 토큰이 잘못되었습니다.");
-        }
-        Boolean refresh = (Boolean) request.getAttribute("refresh");
-        if(refresh == null || refresh == false){
-            request.setAttribute("exception", ErrorCode.INVALID_ACCESS_JWT);
-        }
-        else{
-            request.setAttribute("exception", ErrorCode.INVALID_REFRESH_JWT);
         }
         return false;
     }

@@ -29,8 +29,8 @@ public class Member {
         this.authority = Authority.ROLE_PAUSE;
     }
 
-    public void banMember(){
-        this.authority = Authority.ROLE_BAN;
+    public void deleteMember(){
+        this.authority = Authority.ROLE_DELETE;
     }
     public void update(
             String email,
