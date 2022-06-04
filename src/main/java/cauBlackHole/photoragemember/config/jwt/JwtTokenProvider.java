@@ -3,6 +3,7 @@ package cauBlackHole.photoragemember.config.jwt;
 
 import cauBlackHole.photoragemember.application.DTO.jwt.JwtTokenDto;
 import cauBlackHole.photoragemember.config.exception.ErrorCode;
+import cauBlackHole.photoragemember.config.exception.UnauthorizedException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -75,7 +76,7 @@ public class JwtTokenProvider {
         Claims claims = parseClaims(accessToken);
 
         if (claims.get(AUTHORITIES_KEY) == null) {
-            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+            throw new UnauthorizedException(ErrorCode.INVALID_ACCESS_JWT, "권한 정보가 없는 토큰입니다.");
         }
 
         // 클레임에서 권한 정보 가져오기
@@ -104,11 +105,11 @@ public class JwtTokenProvider {
             log.info("JWT 토큰이 잘못되었습니다.");
         }
         Boolean refresh = (Boolean) request.getAttribute("refresh");
-        if(refresh){
-            request.setAttribute("exception", ErrorCode.INVALID_REFRESH_JWT);
+        if(refresh == null || refresh == false){
+            request.setAttribute("exception", ErrorCode.INVALID_ACCESS_JWT);
         }
         else{
-            request.setAttribute("exception", ErrorCode.INVALID_ACCESS_JWT);
+            request.setAttribute("exception", ErrorCode.INVALID_REFRESH_JWT);
         }
         return false;
     }

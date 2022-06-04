@@ -11,8 +11,8 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class MemberDomainModel {
     private Long id;
-    private String name;
     private String email;
+    private String name;
 
     private String password;
 
@@ -20,44 +20,29 @@ public class MemberDomainModel {
 
     public MemberDomainModel(
             Long id,
-            String name,
             String email,
+            String name,
             String password,
             Authority authority
     ){
         this.id = id;
-        this.name = name;
         this.email = email;
+        this.name = name;
         this.password = password;
         this.authority = authority;
     }
 
     public static MemberDomainModel of(
-            Long id,
             String email,
             String name,
-            String password,
-            Authority authority
+            String password
     ){
         return new MemberDomainModel(
-                id,
+                0L,
                 email,
                 name,
                 password,
-                authority
+                Authority.ROLE_USER
         );
-    }
-
-    public void update(
-            String email,
-            String name
-    ) {
-        this.email = email;
-        this.name = name;
-    }
-
-    public String updatePassword(String newPassword) {
-        this.password = newPassword;
-        return this.password;
     }
 }

@@ -9,6 +9,7 @@ import cauBlackHole.photoragemember.application.DTO.member.MemberRequestSignUpDt
 import cauBlackHole.photoragemember.application.DTO.member.MemberResponseDto;
 import cauBlackHole.photoragemember.application.port.in.AuthServiceUseCase;
 import cauBlackHole.photoragemember.application.port.out.MemberPort;
+import cauBlackHole.photoragemember.config.exception.BadRequestException;
 import cauBlackHole.photoragemember.config.exception.ErrorCode;
 import cauBlackHole.photoragemember.config.exception.UnauthorizedException;
 import cauBlackHole.photoragemember.config.jwt.JwtTokenProvider;
@@ -36,18 +37,25 @@ public class AuthService implements AuthServiceUseCase {
 
     private final MemberPort memberPort;
 
-    private  final MemberRepository memberRepository;
-
     @Transactional
     @Override
     public MemberResponseDto signUp(MemberRequestSignUpDto memberRequestSignUpDto) {
 
-        if (memberRepository.existsByEmail(memberRequestSignUpDto.getEmail())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다");
-        }
+        this.memberPort.findByEmail(memberRequestSignUpDto.getEmail()).ifPresent(
+                email->{
+                    throw new BadRequestException(
+                            ErrorCode.DUPLICATE_EMAIL,
+                            "중복되는 이메일 입니다."
+                    );
+                }
+        );
+        MemberDomainModel memberDomainModel = MemberDomainModel.of(
+                memberRequestSignUpDto.getEmail(),
+                memberRequestSignUpDto.getName(),
+                passwordEncoder.encode(memberRequestSignUpDto.getPassword())
+        );
 
-        Member member = memberRequestSignUpDto.toMember(passwordEncoder);
-        return MemberResponseDto.of(memberRepository.save(member));
+        return MemberResponseDto.of(this.memberPort.create(memberDomainModel));
     }
 
     @Transactional
@@ -93,7 +101,7 @@ public class AuthService implements AuthServiceUseCase {
     public JwtTokenDto reissue(JwtTokenRequestDto jwtTokenRequestDto, HttpServletRequest request) {
         // 1. Refresh Token 검증
         if (!jwtTokenProvider.validateToken(jwtTokenRequestDto.getRefreshToken(), request)) {
-            throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
+            throw new UnauthorizedException(ErrorCode.INVALID_REFRESH_JWT, "Refresh Token이 유효하지 않습니다.");
         }
 
         // 2. Access Token 에서 Member ID 가져오기
@@ -101,11 +109,11 @@ public class AuthService implements AuthServiceUseCase {
 
         // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져옴
         RefreshToken refreshToken = refreshTokenRepository.findByKey(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
+                .orElseThrow(() -> new UnauthorizedException(ErrorCode.INVALID_REFRESH_JWT, "Refresh Token이 유효하지 않습니다."));
 
         // 4. Refresh Token 일치하는지 검사
         if (!refreshToken.getValue().equals(jwtTokenRequestDto.getRefreshToken())) {
-            throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
+            throw new UnauthorizedException(ErrorCode.INVALID_REFRESH_JWT, "Refresh Token의 유저정보가 일치하지 않습니다.");
         }
 
         // 5. 새로운 토큰 생성

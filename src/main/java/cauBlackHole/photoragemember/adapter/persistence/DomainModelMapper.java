@@ -5,7 +5,7 @@ import cauBlackHole.photoragemember.domain.MemberDomainModel;
 
 public abstract class DomainModelMapper {
     protected MemberDomainModel entityToDomainModel(Member member) {
-        return MemberDomainModel.of(
+        return new MemberDomainModel(
                 member.getId(),
                 member.getEmail(),
                 member.getName(),

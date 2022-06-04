@@ -16,8 +16,8 @@ public class MemberPortImpl extends DomainModelMapper implements MemberPort {
     private final MemberRepository memberRepository;
 
     @Override
-    public Optional<MemberDomainModel> findEmail(String memberName) {
-        return this.memberRepository.findByName(memberName).stream().map(this::entityToDomainModel).findAny();
+    public Optional<MemberDomainModel> findEmail(String email) {
+        return this.memberRepository.findByEmail(email).stream().map(this::entityToDomainModel).findAny();
     }
 
     @Override

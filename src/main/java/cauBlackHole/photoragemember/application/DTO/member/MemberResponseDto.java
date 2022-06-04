@@ -1,6 +1,7 @@
 package cauBlackHole.photoragemember.application.DTO.member;
 
 import cauBlackHole.photoragemember.domain.Member;
+import cauBlackHole.photoragemember.domain.MemberDomainModel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,5 +21,12 @@ public class MemberResponseDto {
                 member.getId(),
                 member.getEmail(),
                 member.getName());
+    }
+
+    public static MemberResponseDto of(MemberDomainModel memberDomainModel){
+        return new MemberResponseDto(
+                memberDomainModel.getId(),
+                memberDomainModel.getEmail(),
+                memberDomainModel.getName());
     }
 }

@@ -1,8 +1,7 @@
 package cauBlackHole.photoragemember.adapter.web;
 
 import cauBlackHole.photoragemember.application.DTO.ExceptionDto;
-import cauBlackHole.photoragemember.config.exception.ErrorCode;
-import cauBlackHole.photoragemember.config.exception.UnauthorizedException;
+import cauBlackHole.photoragemember.config.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -32,6 +31,13 @@ public class GlobalExceptionHandler {
         GlobalExceptionHandler.log.error("handleBindException", exception);
         return new ExceptionDto(ErrorCode.INVALID_INPUT_VALUE, "입력 타입이 틀립니다");
     }
+    @ExceptionHandler(value = {BadRequestException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionDto handleBadRequestException(BadRequestException exception) {
+        GlobalExceptionHandler.log.error("error message", exception);
+        return new ExceptionDto(exception.getErrorCode(), exception.getMessage());
+    }
+
     @ExceptionHandler(value = {HttpRequestMethodNotSupportedException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionDto handleBadHttpRequestMethodException(HttpRequestMethodNotSupportedException exception) {
@@ -42,6 +48,19 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {UnauthorizedException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     protected ExceptionDto handleUnauthorizedException(UnauthorizedException exception) {
+        GlobalExceptionHandler.log.error("error message", exception);
+        return new ExceptionDto(exception.getErrorCode(), exception.getMessage());
+    }
+
+    @ExceptionHandler(value = {NotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    protected ExceptionDto handleNotFoundException(NotFoundException exception) {
+        GlobalExceptionHandler.log.error("error message", exception);
+        return new ExceptionDto(exception.getErrorCode(), exception.getMessage());
+    }
+    @ExceptionHandler(value = {ConflictException.class})
+    @ResponseStatus(HttpStatus.CONFLICT)
+    protected ExceptionDto handleConflictException(ConflictException exception) {
         GlobalExceptionHandler.log.error("error message", exception);
         return new ExceptionDto(exception.getErrorCode(), exception.getMessage());
     }

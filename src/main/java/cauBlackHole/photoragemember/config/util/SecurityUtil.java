@@ -1,5 +1,7 @@
 package cauBlackHole.photoragemember.config.util;
 
+import cauBlackHole.photoragemember.config.exception.ConflictException;
+import cauBlackHole.photoragemember.config.exception.ErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -21,7 +23,7 @@ public class SecurityUtil {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || authentication.getName() == null) {
-            throw  new RuntimeException("Security Context 에 인증 정보가 없습니다.");
+            throw new ConflictException(ErrorCode.CONFLICT, "Security Context 에 인증 정보가 없습니다.");
         }
 
         return Long.parseLong(authentication.getName());
