@@ -3,14 +3,10 @@ package cauBlackHole.photoragemember.domain;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 @Getter
 @Setter
 public class MemberDomainModel {
-    private Long id;
+    private String id;
     private String email;
     private String name;
 
@@ -19,7 +15,7 @@ public class MemberDomainModel {
     private Authority authority;
 
     public MemberDomainModel(
-            Long id,
+            String id,
             String email,
             String name,
             String password,
@@ -38,7 +34,7 @@ public class MemberDomainModel {
             String password
     ){
         return new MemberDomainModel(
-                0L,
+                null,
                 email,
                 name,
                 password,

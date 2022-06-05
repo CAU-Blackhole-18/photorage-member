@@ -3,9 +3,11 @@
 *.docx
 *.pdf
 *.xlsx
-application.properties
-application.yml
+application-local.properties
+application-local.yml
 application-jwt.yml
+application-test.yml
+application-prod.yml
 data.sql
 ### IntelliJ IDEA ###
 .idea

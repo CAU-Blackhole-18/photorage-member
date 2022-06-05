@@ -28,7 +28,7 @@ public class MemberService implements MemberServiceUseCase {
     // 현재 SecurityContext 에 있는 유저 정보 가져오기
     @Transactional(readOnly = true)
     public MemberResponseDto getMyInfo() {
-        return this.memberPort.findById(SecurityUtil.getCurrentMemberId())
+        return this.memberPort.findByEmail(SecurityUtil.getCurrentMemberEmail())
                 .map(MemberResponseDto::of)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER,"로그인 유저 정보가 없습니다."));
     }

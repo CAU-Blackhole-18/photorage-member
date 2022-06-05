@@ -1,9 +1,9 @@
 name: CI/CD
 on:
-  push: # feature/*와 develop 브랜치에서 push가 일어났을 때 github action 동작
+  push: #develop 브랜치에서 push가 일어났을 때 github action 동작
     branches:
       - 'develop'
-  pull_request: # feature/*와 develop 브랜치에서 PR이 일어났을 때 github action 동작
+  pull_request: # develop 브랜치에서 PR이 일어났을 때 github action 동작
     branches:
       - 'develop'
   workflow_dispatch:
@@ -42,9 +42,13 @@ jobs:
       - name: Copy appspec
         run: cp appspec.yml ./deploy/
 
+      # script files 복사
+      - name: Copy script
+        run: cp ./scripts/*.sh ./deploy
+
       # 압축파일 형태로 전달
       - name: Make zip file
-        run: zip -r -qq -j ./feature-issue#1.zip ./deploy
+        run: zip -r -qq -j ./photoragemember-member.zip ./deploy
 
       # S3 Bucket으로 copy
       - name: Configure AWS Credentials
@@ -55,8 +59,8 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 --acl private ./feature-issue#1.zip s3://photorage-deploy/
+        run: aws s3 cp --region ap-northeast-2 --acl private ./photoragemember-member.zip s3://photorage-deploy/
 
       # Deploy
       - name: Deploy
-        run: aws deploy create-deployment --application-name photorage-codedeploy  --deployment-group-name photorage-backend --s3-location bucket=photorage-deploy,bundleType=zip,key=feature-issue#1.zip
+        run: aws deploy create-deployment --application-name photorage-codedeploy  --deployment-group-name photorage-backend --s3-location bucket=photorage-deploy,bundleType=zip,key=photoragemember-member.zip

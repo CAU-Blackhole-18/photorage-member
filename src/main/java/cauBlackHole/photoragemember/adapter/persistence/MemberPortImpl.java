@@ -26,7 +26,7 @@ public class MemberPortImpl extends DomainModelMapper implements MemberPort {
     }
 
     @Override
-    public Optional<MemberDomainModel> findById(Long id) {
+    public Optional<MemberDomainModel> findById(String id) {
         return this.memberRepository.findById(id).map(this::entityToDomainModel);
     }
 
@@ -44,7 +44,7 @@ public class MemberPortImpl extends DomainModelMapper implements MemberPort {
     }
 
     @Override
-    public Optional<MemberDomainModel> update(Long id, MemberDomainModel memberDomainModel) {
+    public Optional<MemberDomainModel> update(String id, MemberDomainModel memberDomainModel) {
         return this.memberRepository.findById(id).map(
                 srcUser -> {
                     srcUser.setEmail(memberDomainModel.getEmail());
@@ -55,7 +55,7 @@ public class MemberPortImpl extends DomainModelMapper implements MemberPort {
     }
 
     @Override
-    public Optional<MemberDomainModel> updatePassword(Long id, String password) {
+    public Optional<MemberDomainModel> updatePassword(String id, String password) {
         return this.memberRepository.findById(id).map(
                 srcUser -> {
                     srcUser.setPassword(password);

@@ -24,7 +24,7 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
         //필요한 권한이 없이 접근하려 할때 403
-        MemberDomainModel memberDomainModel = this.memberPort.findById(SecurityUtil.getCurrentMemberId())
+        MemberDomainModel memberDomainModel = this.memberPort.findByEmail(SecurityUtil.getCurrentMemberEmail())
                 .stream()
                 .findFirst()
                 .orElseThrow(()-> new NotFoundException(ErrorCode.NOT_FOUND_USER, "현재 접속한 유저를 찾을 수 없습니다."));

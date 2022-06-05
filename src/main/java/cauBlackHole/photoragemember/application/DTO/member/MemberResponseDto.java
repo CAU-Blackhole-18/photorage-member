@@ -8,11 +8,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MemberResponseDto {
-    private Long id;
+    private String id;
     private String email;
     private String name;
 
-    private MemberResponseDto(Long id, String email, String name){
+    private MemberResponseDto(String id, String email, String name){
         this.id = id; this.email = email; this.name = name;
     }
 
