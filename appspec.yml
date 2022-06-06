@@ -9,7 +9,7 @@ files:
       - object: /home/ec2-user/app
         pattern: "**"
         owner: ec2-user
-        group: ec-user
+        group: ec2-user
         type:
           - directory
 
