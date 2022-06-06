@@ -1,5 +1,5 @@
 package cauBlackHole.photoragemember.adapter.persistence;
-import cauBlackHole.photoragemember.application.port.out.MemberPort;
+import cauBlackHole.photoragemember.application.port.outPort.MemberPort;
 import cauBlackHole.photoragemember.domain.Member;
 import cauBlackHole.photoragemember.domain.MemberDomainModel;
 import lombok.RequiredArgsConstructor;

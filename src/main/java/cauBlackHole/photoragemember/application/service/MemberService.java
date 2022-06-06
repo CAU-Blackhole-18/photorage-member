@@ -1,14 +1,11 @@
 package cauBlackHole.photoragemember.application.service;
 
 
-import cauBlackHole.photoragemember.adapter.persistence.MemberRepository;
 import cauBlackHole.photoragemember.application.DTO.member.MemberResponseDto;
-import cauBlackHole.photoragemember.application.port.in.MemberServiceUseCase;
-import cauBlackHole.photoragemember.application.port.out.MemberPort;
-import cauBlackHole.photoragemember.config.exception.BadRequestException;
+import cauBlackHole.photoragemember.application.port.inPort.MemberServiceUseCase;
+import cauBlackHole.photoragemember.application.port.outPort.MemberPort;
 import cauBlackHole.photoragemember.config.exception.ErrorCode;
 import cauBlackHole.photoragemember.config.exception.NotFoundException;
-import cauBlackHole.photoragemember.config.exception.UnauthorizedException;
 import cauBlackHole.photoragemember.config.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

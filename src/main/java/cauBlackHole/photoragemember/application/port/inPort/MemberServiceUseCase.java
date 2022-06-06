@@ -1,4 +1,4 @@
-package cauBlackHole.photoragemember.application.port.in;
+package cauBlackHole.photoragemember.application.port.inPort;
 
 import cauBlackHole.photoragemember.application.DTO.member.MemberResponseDto;
 

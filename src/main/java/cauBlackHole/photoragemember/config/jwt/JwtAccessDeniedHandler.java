@@ -1,6 +1,6 @@
 package cauBlackHole.photoragemember.config.jwt;
 
-import cauBlackHole.photoragemember.application.port.out.MemberPort;
+import cauBlackHole.photoragemember.application.port.outPort.MemberPort;
 import cauBlackHole.photoragemember.config.exception.ErrorCode;
 import cauBlackHole.photoragemember.config.exception.NotFoundException;
 import cauBlackHole.photoragemember.config.exception.UnauthorizedException;
