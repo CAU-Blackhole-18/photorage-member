@@ -1,14 +1,10 @@
 package cauBlackHole.photoragemember.application.service;
 
-import cauBlackHole.photoragemember.adapter.persistence.MemberPortImpl;
-import cauBlackHole.photoragemember.adapter.persistence.MemberRepository;
-import cauBlackHole.photoragemember.application.port.out.MemberPort;
+import cauBlackHole.photoragemember.application.port.outPort.MemberPort;
 import cauBlackHole.photoragemember.config.exception.ErrorCode;
 import cauBlackHole.photoragemember.config.exception.NotFoundException;
-import cauBlackHole.photoragemember.domain.Member;
 import cauBlackHole.photoragemember.domain.MemberDomainModel;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.MemberImpl;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
