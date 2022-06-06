@@ -8,11 +8,13 @@ files:
     permissions:
       - object: /home/ec2-user/app
         pattern: "**"
-        owner: root
-        group: root
+        owner: ec2-user
+        group: ec-user
+        type:
+          - directory
 
     hooks:
       ApplicationStart:
         - location: deploy.sh
           timeout: 60
-          runas: root
+          runas: ec2-user
