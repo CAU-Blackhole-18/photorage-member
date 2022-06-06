@@ -5,14 +5,14 @@ files:
     destination: /home/ec2-user/app # source에서 지정된 파일을  받을 위치
     overwrite: yes # 기존 파일 덮어쓰기 허용
 
-    permissions:
-      - object: /
-        pattern: "**"
-        owner: ec2-user
-        group: ec2-user
+permissions:
+  - object: /
+    pattern: "**"
+    owner: ec2-user
+    group: ec2-user
 
-    hooks:
-      ApplicationStart:
-        - location: deploy.sh
-          timeout: 100
-          runas: ec2-user
+hooks:
+  ApplicationStart:
+    - location: deploy.sh
+      timeout: 100
+      runas: ec2-user
