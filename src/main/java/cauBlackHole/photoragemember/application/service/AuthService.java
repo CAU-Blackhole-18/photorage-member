@@ -32,7 +32,7 @@ public class AuthService implements AuthServiceUseCase {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberPort memberPort;
-    private final RedisTemplate redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Transactional
     @Override
