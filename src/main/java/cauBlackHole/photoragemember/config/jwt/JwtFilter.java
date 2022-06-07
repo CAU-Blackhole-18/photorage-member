@@ -3,6 +3,7 @@ package cauBlackHole.photoragemember.config.jwt;
 import cauBlackHole.photoragemember.config.exception.ErrorCode;
 import cauBlackHole.photoragemember.config.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,12 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String BEARER_PREFIX = "Bearer ";
-    private final RedisTemplate redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
     private final JwtTokenProvider jwtTokenProvider;
 
     // 실제 필터링 로직은 doFilterInternal 에 들어감
@@ -36,16 +38,13 @@ public class JwtFilter extends OncePerRequestFilter {
         // 정상 토큰이면 해당 토큰으로 Authentication 을 가져와서 SecurityContext 에 저장
         if(jwt != null) {
             if (StringUtils.hasText(jwt)) {
-                if(jwtTokenProvider.validateToken(jwt)) {
+                if (jwtTokenProvider.validateToken(jwt)) {
                     // (추가) Redis 에 해당 accessToken logout 여부 확인
-                    String isLogout = (String)redisTemplate.opsForValue().get(jwt);
+                    String isLogout = (String) redisTemplate.opsForValue().get(jwt);
                     if (ObjectUtils.isEmpty(isLogout)) {
                         Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     }
-                }
-                else{
-                    throw new UnauthorizedException(ErrorCode.INVALID_ACCESS_JWT, "유효하지 않은 AccessToken입니다.");
                 }
             }
         }
