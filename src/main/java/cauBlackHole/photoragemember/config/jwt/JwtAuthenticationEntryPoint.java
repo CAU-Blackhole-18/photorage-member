@@ -1,6 +1,7 @@
 package cauBlackHole.photoragemember.config.jwt;
 
 import cauBlackHole.photoragemember.config.exception.ErrorCode;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 @Component
+@Slf4j
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
@@ -18,6 +20,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
         ErrorCode errorCode = (ErrorCode) request.getAttribute("exception");
+        log.info("error code = {}", errorCode);
 
         // 유효한 자격증명을 제공하지 않고 접근하려 할때 401
         if(errorCode == null || errorCode == ErrorCode.INVALID_ACCESS_JWT) {
