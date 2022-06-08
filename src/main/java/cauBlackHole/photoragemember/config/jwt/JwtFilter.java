@@ -41,10 +41,14 @@ public class JwtFilter extends OncePerRequestFilter {
                 if (jwtTokenProvider.validateToken(jwt)) {
                     // (추가) Redis 에 해당 accessToken logout 여부 확인
                     String isLogout = (String) redisTemplate.opsForValue().get(jwt);
+                    log.info("isLogout  = {}", isLogout);
                     if (ObjectUtils.isEmpty(isLogout)) {
                         Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     }
+                }
+                else{
+                    request.setAttribute("exception", ErrorCode.INVALID_ACCESS_JWT);
                 }
             }
         }
