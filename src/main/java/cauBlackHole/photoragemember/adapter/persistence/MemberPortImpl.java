@@ -1,5 +1,7 @@
 package cauBlackHole.photoragemember.adapter.persistence;
 import cauBlackHole.photoragemember.application.port.outPort.MemberPort;
+import cauBlackHole.photoragemember.config.exception.ConflictException;
+import cauBlackHole.photoragemember.config.exception.ErrorCode;
 import cauBlackHole.photoragemember.domain.Member;
 import cauBlackHole.photoragemember.domain.MemberDomainModel;
 import lombok.RequiredArgsConstructor;
@@ -47,8 +49,7 @@ public class MemberPortImpl extends DomainModelMapper implements MemberPort {
     public Optional<MemberDomainModel> update(String id, MemberDomainModel memberDomainModel) {
         return this.memberRepository.findById(id).map(
                 srcUser -> {
-                    srcUser.setEmail(memberDomainModel.getEmail());
-                    srcUser.setName(memberDomainModel.getName());
+                    srcUser.update(memberDomainModel.getName(), memberDomainModel.getNickname());
                     return this.entityToDomainModel(this.memberRepository.save(srcUser));
                 }
         );
@@ -71,8 +72,19 @@ public class MemberPortImpl extends DomainModelMapper implements MemberPort {
                 memberDomainModel.getEmail(),
                 memberDomainModel.getPassword(),
                 memberDomainModel.getName(),
+                memberDomainModel.getNickname(),
                 memberDomainModel.getAuthority()
         );
         return this.entityToDomainModel(this.memberRepository.save(member));
+    }
+
+    @Override
+    public void delete(MemberDomainModel memberDomainModel) {
+        try {
+            this.memberRepository.deleteById(memberDomainModel.getId());
+        }
+        catch (Exception e){
+            throw new ConflictException(ErrorCode.DELETE_FAIL, "회원 탈퇴를 실패하셨습니다");
+        }
     }
 }

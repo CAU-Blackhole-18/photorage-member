@@ -1,7 +1,9 @@
 package cauBlackHole.photoragemember.application.service;
 
 import cauBlackHole.photoragemember.application.DTO.jwt.JwtTokenDto;
-import cauBlackHole.photoragemember.application.DTO.jwt.JwtTokenRequestDto;
+import cauBlackHole.photoragemember.application.DTO.jwt.JwtTokenRequestLogoutDto;
+import cauBlackHole.photoragemember.application.DTO.jwt.JwtTokenRequestReissueDto;
+import cauBlackHole.photoragemember.application.DTO.member.MemberRequestFindPasswordDto;
 import cauBlackHole.photoragemember.application.DTO.member.MemberRequestSignInDto;
 import cauBlackHole.photoragemember.application.DTO.member.MemberRequestSignUpDto;
 import cauBlackHole.photoragemember.application.DTO.member.MemberResponseDto;
@@ -9,9 +11,12 @@ import cauBlackHole.photoragemember.application.port.inPort.AuthServiceUseCase;
 import cauBlackHole.photoragemember.application.port.outPort.MemberPort;
 import cauBlackHole.photoragemember.config.exception.BadRequestException;
 import cauBlackHole.photoragemember.config.exception.ErrorCode;
+import cauBlackHole.photoragemember.config.exception.NotFoundException;
 import cauBlackHole.photoragemember.config.exception.UnauthorizedException;
 import cauBlackHole.photoragemember.config.jwt.JwtTokenProvider;
+import cauBlackHole.photoragemember.config.util.SecurityUtil;
 import cauBlackHole.photoragemember.domain.MemberDomainModel;
+import cauBlackHole.photoragemember.infrastructure.NaverMailSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -33,6 +39,8 @@ public class AuthService implements AuthServiceUseCase {
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberPort memberPort;
     private final RedisTemplate<String, Object> redisTemplate;
+
+    private final NaverMailSender naverMailSender;
 
     @Transactional
     @Override
@@ -49,6 +57,7 @@ public class AuthService implements AuthServiceUseCase {
         MemberDomainModel memberDomainModel = MemberDomainModel.of(
                 memberRequestSignUpDto.getEmail(),
                 memberRequestSignUpDto.getName(),
+                memberRequestSignUpDto.getNickname(),
                 passwordEncoder.encode(memberRequestSignUpDto.getPassword())
         );
 
@@ -93,29 +102,29 @@ public class AuthService implements AuthServiceUseCase {
     }
     @Transactional
     @Override
-    public String logout(JwtTokenRequestDto jwtTokenRequestDto)
+    public String logout(JwtTokenRequestLogoutDto jwtTokenRequestLogoutDto)
     {
         // 1. Access Token 검증
-        if (!jwtTokenProvider.validateToken(jwtTokenRequestDto.getAccessToken())) {
+        if (!jwtTokenProvider.validateToken(jwtTokenRequestLogoutDto.getAccessToken())) {
             throw new UnauthorizedException(ErrorCode.INVALID_ACCESS_JWT, "잘못된 요청입니다.");
         }
         // 2. Access Token 에서 User의 name(id)을 가져온다.
-        Authentication authentication = jwtTokenProvider.getAuthentication(jwtTokenRequestDto.getAccessToken());
+        Authentication authentication = jwtTokenProvider.getAuthentication(jwtTokenRequestLogoutDto.getAccessToken());
         // 3. Redis 에서 해당 User의 name(email) 로 저장된 Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제합니다.
         if (redisTemplate.opsForValue().get("RT:" + authentication.getName()) != null) {
             // Refresh Token 삭제
             redisTemplate.delete("RT:" + authentication.getName());
         }
         // 4. 해당 Access Token 유효시간 가지고 와서 BlackList 로 저장하기
-        Long expiration = jwtTokenProvider.getExpiration(jwtTokenRequestDto.getAccessToken());
+        Long expiration = jwtTokenProvider.getExpiration(jwtTokenRequestLogoutDto.getAccessToken());
         redisTemplate.opsForValue()
-                .set(jwtTokenRequestDto.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
+                .set(jwtTokenRequestLogoutDto.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
 
         return "로그아웃 되었습니다.";
     }
     @Transactional
     @Override
-    public JwtTokenDto reissue(JwtTokenRequestDto jwtTokenRequestDto) {
+    public JwtTokenDto reissue(JwtTokenRequestReissueDto jwtTokenRequestDto) {
         // 1. Refresh Token 검증
         if (!jwtTokenProvider.validateToken(jwtTokenRequestDto.getRefreshToken())) {
             throw new UnauthorizedException(ErrorCode.INVALID_REFRESH_JWT, "Refresh Token이 유효하지 않습니다.");
@@ -149,5 +158,31 @@ public class AuthService implements AuthServiceUseCase {
 
         // 토큰 발급
         return jwtTokenDto;
+    }
+
+    @Transactional
+    @Override
+    public String findPassword(MemberRequestFindPasswordDto findPasswordDto) {
+        Optional<MemberDomainModel> memberDomainModel = this.memberPort.findByEmail(findPasswordDto.getEmail());
+        if(memberDomainModel.isEmpty()){
+            throw new BadRequestException(ErrorCode.INVALID_EMAIL, "이 이메일로 가입된 사용자가 없습니다.");
+        }
+
+        if(!memberDomainModel.get().getEmail().equals(findPasswordDto.getEmail()))
+        {
+            throw new BadRequestException(ErrorCode.INVALID_EMAIL, "이메일이 틀렸습니다.");
+        }
+        if(!memberDomainModel.get().getName().equals(findPasswordDto.getName()))
+        {
+            throw new BadRequestException(ErrorCode.INVALID_NAME, "이름이 틀렸습니다.");
+        }
+        if(!memberDomainModel.get().getNickname().equals(findPasswordDto.getNickname()))
+        {
+            throw new BadRequestException(ErrorCode.INVALID_NICKNAME, "닉네임이 틀렸습니다.");
+        }
+
+        naverMailSender.sendPassword(memberDomainModel.get());
+
+        return "이메일로 임시 비밀번호를 보냈습니다.";
     }
 }

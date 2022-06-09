@@ -10,6 +10,7 @@ public class MemberDomainModel {
     private String email;
     private String name;
 
+    private String nickname;
     private String password;
 
     private Authority authority;
@@ -18,12 +19,14 @@ public class MemberDomainModel {
             String id,
             String email,
             String name,
+            String nickname,
             String password,
             Authority authority
     ){
         this.id = id;
         this.email = email;
         this.name = name;
+        this.nickname = nickname;
         this.password = password;
         this.authority = authority;
     }
@@ -31,12 +34,14 @@ public class MemberDomainModel {
     public static MemberDomainModel of(
             String email,
             String name,
+            String nickname,
             String password
     ){
         return new MemberDomainModel(
                 null,
                 email,
                 name,
+                nickname,
                 password,
                 Authority.ROLE_USER
         );

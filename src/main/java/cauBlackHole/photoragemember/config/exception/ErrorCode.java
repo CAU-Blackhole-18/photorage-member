@@ -15,13 +15,21 @@ public enum ErrorCode {
     INVALID_EMAIL("ME003"),
     INVALID_PASSWORD("ME004"),
 
+    INVALID_NAME("ME014"),
+
+    INVALID_NICKNAME("ME015"),
+
     DUPLICATE_EMAIL("ME008"),
+
 
     /**
      * 401 Unauthorized
      */
     INVALID_ACCESS_JWT("ME001"),
     INVALID_REFRESH_JWT("ME002"),
+
+    WRONG_PASSWORD("ME013"),
+
 
     /**
      * 403 Forbidden
@@ -38,6 +46,8 @@ public enum ErrorCode {
     /**
      * 409 CONFLICT
      */
+    DELETE_FAIL("ME997"),
+    UPDATE_FAIL("ME998"),
     CONFLICT("ME999");
 
     private String code;

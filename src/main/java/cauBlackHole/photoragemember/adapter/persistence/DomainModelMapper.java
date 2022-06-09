@@ -9,6 +9,7 @@ public abstract class DomainModelMapper {
                 member.getId(),
                 member.getEmail(),
                 member.getName(),
+                member.getNickname(),
                 member.getPassword(),
                 member.getAuthority()
         );

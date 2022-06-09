@@ -22,4 +22,5 @@ public interface MemberPort {
 
     MemberDomainModel create(MemberDomainModel memberDomainModel);
 
+    void delete(MemberDomainModel memberDomainModel);
 }

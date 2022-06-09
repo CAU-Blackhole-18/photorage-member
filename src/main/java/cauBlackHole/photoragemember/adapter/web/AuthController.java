@@ -1,6 +1,8 @@
 package cauBlackHole.photoragemember.adapter.web;
 import cauBlackHole.photoragemember.application.DTO.jwt.JwtTokenDto;
-import cauBlackHole.photoragemember.application.DTO.jwt.JwtTokenRequestDto;
+import cauBlackHole.photoragemember.application.DTO.jwt.JwtTokenRequestLogoutDto;
+import cauBlackHole.photoragemember.application.DTO.jwt.JwtTokenRequestReissueDto;
+import cauBlackHole.photoragemember.application.DTO.member.MemberRequestFindPasswordDto;
 import cauBlackHole.photoragemember.application.DTO.member.MemberRequestSignInDto;
 import cauBlackHole.photoragemember.application.DTO.member.MemberRequestSignUpDto;
 import cauBlackHole.photoragemember.application.DTO.member.MemberResponseDto;
@@ -10,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/auth")
@@ -34,12 +34,19 @@ public class AuthController {
 
     @PostMapping("/logout")
     @ResponseStatus(value = HttpStatus.OK)
-    public String logout(@RequestBody JwtTokenRequestDto jwtTokenRequestDto){
-        return this.authService.logout(jwtTokenRequestDto);
+    public String logout(@RequestBody @Validated JwtTokenRequestLogoutDto jwtTokenRequestLogoutDto){
+        return this.authService.logout(jwtTokenRequestLogoutDto);
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<JwtTokenDto> reissue(@RequestBody JwtTokenRequestDto jwtTokenRequestDto) {
+    public ResponseEntity<JwtTokenDto> reissue(@RequestBody @Validated JwtTokenRequestReissueDto jwtTokenRequestDto) {
         return ResponseEntity.ok(this.authService.reissue(jwtTokenRequestDto));
+    }
+
+    @PostMapping("/password")
+    @ResponseStatus(value = HttpStatus.OK)
+    public String findPassword(@RequestBody @Validated MemberRequestFindPasswordDto findPasswordDto)
+    {
+        return this.authService.findPassword(findPasswordDto);
     }
 }

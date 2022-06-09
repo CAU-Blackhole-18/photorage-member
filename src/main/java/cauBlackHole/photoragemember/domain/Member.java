@@ -29,6 +29,8 @@ public class Member {
 
     private String name;
 
+    private String nickname;
+
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
@@ -48,11 +50,11 @@ public class Member {
         this.authority = Authority.ROLE_DELETE;
     }
     public void update(
-            String email,
-            String name
+            String name,
+            String nickname
     ) {
-        this.email = email;
         this.name = name;
+        this.nickname = nickname;
     }
 
     public String updatePassword(String newPassword) {
@@ -60,7 +62,8 @@ public class Member {
         return this.password;
     }
     @Builder
-    public Member(String email, String password, String name, Authority authority){
-        this.email = email; this.password = password; this.name = name; this.authority = authority;
+    public Member(String email, String password, String name, String nickname, Authority authority){
+        this.email = email; this.password = password; this.name = name;
+        this.nickname = nickname; this.authority = authority;
     }
 }

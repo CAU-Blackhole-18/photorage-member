@@ -12,21 +12,25 @@ public class MemberResponseDto {
     private String email;
     private String name;
 
-    private MemberResponseDto(String id, String email, String name){
-        this.id = id; this.email = email; this.name = name;
+    private String nickname;
+
+    private MemberResponseDto(String id, String email, String name, String nickname){
+        this.id = id; this.email = email; this.name = name; this.nickname = nickname;
     }
 
     public static MemberResponseDto of(Member member){
         return new MemberResponseDto(
                 member.getId(),
                 member.getEmail(),
-                member.getName());
+                member.getName(),
+                member.getNickname());
     }
 
     public static MemberResponseDto of(MemberDomainModel memberDomainModel){
         return new MemberResponseDto(
                 memberDomainModel.getId(),
                 memberDomainModel.getEmail(),
-                memberDomainModel.getName());
+                memberDomainModel.getName(),
+                memberDomainModel.getNickname());
     }
 }

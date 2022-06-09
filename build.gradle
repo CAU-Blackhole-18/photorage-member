@@ -36,6 +36,8 @@ dependencies {
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client' // MariaDB
 	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.4.0'
 
+	implementation 'org.springframework.boot:spring-boot-starter-mail' //메일
+
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
