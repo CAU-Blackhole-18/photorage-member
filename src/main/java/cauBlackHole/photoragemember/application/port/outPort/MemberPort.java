@@ -1,26 +1,24 @@
 package cauBlackHole.photoragemember.application.port.outPort;
 
-import cauBlackHole.photoragemember.domain.MemberDomainModel;
+import cauBlackHole.photoragemember.domain.Member;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface MemberPort {
-    Optional<MemberDomainModel> findEmail(String email);
+    List<Member> findEmail(String name, String nickname);
 
-    Optional<MemberDomainModel> findForPassword(String email, String name);
+    Optional<Member> findForPassword(String email, String name);
 
-    Optional<MemberDomainModel> findById(String id);
+    Optional<Member> findById(String id);
 
-    List<MemberDomainModel> findByName(String name);
+    List<Member> findByName(String name);
 
-    Optional<MemberDomainModel> findByEmail(String email);
+    Optional<Member> findByEmail(String email);
 
-    Optional<MemberDomainModel> update(String id, MemberDomainModel memberDomainModel);
+    Optional<Member> update(Member updateMember);
 
-    Optional<MemberDomainModel> updatePassword(String id, String password);
+    Member create(Member newMember);
 
-    MemberDomainModel create(MemberDomainModel memberDomainModel);
-
-    void delete(MemberDomainModel memberDomainModel);
+    void delete(Member member);
 }

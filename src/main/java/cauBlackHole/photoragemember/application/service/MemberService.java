@@ -7,7 +7,7 @@ import cauBlackHole.photoragemember.application.port.inPort.MemberServiceUseCase
 import cauBlackHole.photoragemember.application.port.outPort.MemberPort;
 import cauBlackHole.photoragemember.config.exception.*;
 import cauBlackHole.photoragemember.config.util.SecurityUtil;
-import cauBlackHole.photoragemember.domain.MemberDomainModel;
+import cauBlackHole.photoragemember.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,11 +43,11 @@ public class MemberService implements MemberServiceUseCase {
     @Transactional
     @Override
     public MemberResponseDto updateMyInfo(MemberRequestUpdateDto memberRequestUpdateDto) {
-        MemberDomainModel memberDomainModel = this.memberPort.findByEmail(SecurityUtil.getCurrentMemberEmail())
-                .map(originMemberDomainModel -> originMemberDomainModel.update(memberRequestUpdateDto))
+        Member updateMember = this.memberPort.findByEmail(SecurityUtil.getCurrentMemberEmail())
+                .map(member -> member.updateNameAndNickname(memberRequestUpdateDto))
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER, "로그인 유저 정보가 없습니다."));
 
-        return this.memberPort.update(memberDomainModel.getId(), memberDomainModel)
+        return this.memberPort.update(updateMember)
                 .map(MemberResponseDto::of)
                 .orElseThrow(()-> new ConflictException(ErrorCode.UPDATE_FAIL, "현재 사용자 정보 업데이트를 실패했습니다."));
     }
@@ -55,10 +55,10 @@ public class MemberService implements MemberServiceUseCase {
     @Transactional
     @Override
     public String leave() {
-        MemberDomainModel memberDomainModel = this.memberPort.findByEmail(SecurityUtil.getCurrentMemberEmail())
-                .orElseThrow(()->new NotFoundException(ErrorCode.NOT_FOUND_USER,"로그인 유저 정보가 없습니다."));
+        Member member = this.memberPort.findByEmail(SecurityUtil.getCurrentMemberEmail())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER, "로그인 유저 정보가 없습니다."));
 
-        this.memberPort.delete(memberDomainModel);
+        this.memberPort.delete(member);
 
         return "회원이 탈퇴되었습니다.";
     }
@@ -66,11 +66,13 @@ public class MemberService implements MemberServiceUseCase {
     @Transactional
     @Override
     public MemberResponseDto updatePassword(MemberRequestUpdatePasswordDto updatePasswordDto) {
-        MemberDomainModel memberDomainModel = this.memberPort.findByEmail(SecurityUtil.getCurrentMemberEmail())
-                .map(m->m.matchPassword(passwordEncoder, updatePasswordDto.getOriginPassword()))
-                .orElseThrow(()->new NotFoundException(ErrorCode.NOT_FOUND_USER,"로그인 유저 정보가 없습니다."));
+        Member findMember = this.memberPort.findByEmail(SecurityUtil.getCurrentMemberEmail())
+                .map(m -> m.matchPassword(passwordEncoder, updatePasswordDto.getOriginPassword()))
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER, "로그인 유저 정보가 없습니다."));
 
-        return this.memberPort.updatePassword(memberDomainModel.getId(), passwordEncoder.encode(updatePasswordDto.getNewPassword()))
+        findMember.updatePassword(passwordEncoder.encode(updatePasswordDto.getNewPassword()));
+
+        return this.memberPort.update(findMember)
                 .map(MemberResponseDto::of)
                 .orElseThrow(()-> new ConflictException(ErrorCode.UPDATE_FAIL, "비밀번호 업데이트를 실패했습니다."));
     }

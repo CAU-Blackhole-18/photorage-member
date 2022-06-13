@@ -15,9 +15,9 @@ public enum ErrorCode {
     INVALID_EMAIL("ME003"),
     INVALID_PASSWORD("ME004"),
 
-    INVALID_NAME("ME014"),
+    INVALID_NAME("ME013"),
 
-    INVALID_NICKNAME("ME015"),
+    INVALID_NICKNAME("ME014"),
 
     DUPLICATE_EMAIL("ME008"),
 
@@ -27,8 +27,6 @@ public enum ErrorCode {
      */
     INVALID_ACCESS_JWT("ME001"),
     INVALID_REFRESH_JWT("ME002"),
-
-    WRONG_PASSWORD("ME013"),
 
 
     /**

@@ -11,11 +11,10 @@ import cauBlackHole.photoragemember.application.port.inPort.AuthServiceUseCase;
 import cauBlackHole.photoragemember.application.port.outPort.MemberPort;
 import cauBlackHole.photoragemember.config.exception.BadRequestException;
 import cauBlackHole.photoragemember.config.exception.ErrorCode;
-import cauBlackHole.photoragemember.config.exception.NotFoundException;
 import cauBlackHole.photoragemember.config.exception.UnauthorizedException;
 import cauBlackHole.photoragemember.config.jwt.JwtTokenProvider;
-import cauBlackHole.photoragemember.config.util.SecurityUtil;
-import cauBlackHole.photoragemember.domain.MemberDomainModel;
+import cauBlackHole.photoragemember.domain.Authority;
+import cauBlackHole.photoragemember.domain.Member;
 import cauBlackHole.photoragemember.infrastructure.NaverMailSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -54,31 +52,27 @@ public class AuthService implements AuthServiceUseCase {
                     );
                 }
         );
-        MemberDomainModel memberDomainModel = MemberDomainModel.of(
+        Member newMember = Member.createMember(
                 memberRequestSignUpDto.getEmail(),
+                passwordEncoder.encode(memberRequestSignUpDto.getPassword()),
                 memberRequestSignUpDto.getName(),
                 memberRequestSignUpDto.getNickname(),
-                passwordEncoder.encode(memberRequestSignUpDto.getPassword())
+                Authority.ROLE_USER
         );
 
-        return MemberResponseDto.of(this.memberPort.create(memberDomainModel));
+        return MemberResponseDto.of(this.memberPort.create(newMember));
     }
 
     @Transactional
     @Override
     public JwtTokenDto signIn(MemberRequestSignInDto memberRequestSignInDto) {
-        MemberDomainModel memberDomainModel = this.memberPort.findByEmail(memberRequestSignInDto.getEmail()).orElseThrow(
-                ()-> new UnauthorizedException(
+        Member findMember = this.memberPort.findByEmail(memberRequestSignInDto.getEmail()).orElseThrow(
+                () -> new BadRequestException(
                         ErrorCode.INVALID_EMAIL,
-                        "잘못된 이메일 입니다."
+                        "이메일이 틀렸습니다."
                 )
         );
-        if(!passwordEncoder.matches(memberRequestSignInDto.getPassword(), memberDomainModel.getPassword())){
-            throw new UnauthorizedException(
-                    ErrorCode.INVALID_PASSWORD,
-                    "비밀번호를 잘못 입력했습니다."
-            );
-        }
+        findMember.matchPassword(passwordEncoder, memberRequestSignInDto.getPassword());
 
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = memberRequestSignInDto.toAuthentication();
@@ -163,25 +157,13 @@ public class AuthService implements AuthServiceUseCase {
     @Transactional
     @Override
     public String findPassword(MemberRequestFindPasswordDto findPasswordDto) {
-        Optional<MemberDomainModel> memberDomainModel = this.memberPort.findByEmail(findPasswordDto.getEmail());
-        if(memberDomainModel.isEmpty()){
-            throw new BadRequestException(ErrorCode.INVALID_EMAIL, "이 이메일로 가입된 사용자가 없습니다.");
-        }
+        Member findMember = this.memberPort.findByEmail(findPasswordDto.getEmail()).orElseThrow(() -> {
+                    throw new BadRequestException(ErrorCode.INVALID_EMAIL, "이 이메일로 가입된 사용자가 없습니다.");
+                }
+        );
+        findMember.validateFindPassword(findPasswordDto);
 
-        if(!memberDomainModel.get().getEmail().equals(findPasswordDto.getEmail()))
-        {
-            throw new BadRequestException(ErrorCode.INVALID_EMAIL, "이메일이 틀렸습니다.");
-        }
-        if(!memberDomainModel.get().getName().equals(findPasswordDto.getName()))
-        {
-            throw new BadRequestException(ErrorCode.INVALID_NAME, "이름이 틀렸습니다.");
-        }
-        if(!memberDomainModel.get().getNickname().equals(findPasswordDto.getNickname()))
-        {
-            throw new BadRequestException(ErrorCode.INVALID_NICKNAME, "닉네임이 틀렸습니다.");
-        }
-
-        naverMailSender.sendPassword(memberDomainModel.get());
+        naverMailSender.sendPassword(findMember);
 
         return "이메일로 임시 비밀번호를 보냈습니다.";
     }

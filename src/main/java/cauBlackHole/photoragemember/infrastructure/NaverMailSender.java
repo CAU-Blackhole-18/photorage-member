@@ -1,12 +1,9 @@
 package cauBlackHole.photoragemember.infrastructure;
 
-import cauBlackHole.photoragemember.application.DTO.member.MemberResponseDto;
 import cauBlackHole.photoragemember.application.port.outPort.MemberPort;
 import cauBlackHole.photoragemember.config.exception.ConflictException;
 import cauBlackHole.photoragemember.config.exception.ErrorCode;
-import cauBlackHole.photoragemember.config.exception.NotFoundException;
-import cauBlackHole.photoragemember.config.util.SecurityUtil;
-import cauBlackHole.photoragemember.domain.MemberDomainModel;
+import cauBlackHole.photoragemember.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,8 +11,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -30,23 +25,25 @@ public class NaverMailSender {
     @Value("${spring.mail.username}")
     private String sender;
 
-    public void sendPassword(MemberDomainModel memberDomainModel){
+    public void sendPassword(Member member){
 
         log.info("임시 비밀번호 발급 시작");
 
         String tempPassword = getTempPassword();
-        Optional<MemberDomainModel> memberDomainModel1 = this.memberPort.updatePassword(memberDomainModel.getId(),
-                passwordEncoder.encode(tempPassword));
-        if(memberDomainModel1.isEmpty()){
-            throw new ConflictException(ErrorCode.UPDATE_FAIL, "임시 비밀번호 업데이트를 실패했습니다.");
-        }
+        member.updatePassword(passwordEncoder.encode(tempPassword));
+
+        Member updateMember = this.memberPort.update(member).orElseThrow(() -> {
+                    throw new ConflictException(ErrorCode.UPDATE_FAIL, "임시 비밀번호 업데이트를 실패했습니다.");
+                }
+        );
+
         //메세지 생성하고 보낼 메일 설정 저장
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(memberDomainModel.getEmail());
+        message.setTo(updateMember.getEmail());
         message.setFrom(sender);
 
-        message.setSubject(memberDomainModel.getName()+" : New Temporary Password is here!");
-        message.setText("Hello" + memberDomainModel.getName() + "! We send your temporary password here. \nBut this is not secured so please change password once you sign into our site. \nPassword : " + tempPassword);
+        message.setSubject(updateMember.getName()+" : New Temporary Password is here!");
+        message.setText("Hello" + updateMember.getName() + "! We send your temporary password here. \nBut this is not secured so please change password once you sign into our site. \nPassword : " + tempPassword);
         javaMailSender.send(message);
         log.info("임시 비밀번호 발급 완료");
     }

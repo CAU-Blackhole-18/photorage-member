@@ -3,7 +3,7 @@ package cauBlackHole.photoragemember.application.service;
 import cauBlackHole.photoragemember.application.port.outPort.MemberPort;
 import cauBlackHole.photoragemember.config.exception.ErrorCode;
 import cauBlackHole.photoragemember.config.exception.NotFoundException;
-import cauBlackHole.photoragemember.domain.MemberDomainModel;
+import cauBlackHole.photoragemember.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,12 +32,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     // DB 에 User 값이 존재한다면 UserDetails 객체로 만들어서 리턴(authenticate.getName() -> Email)
-    private UserDetails createUserDetails(MemberDomainModel memberDomainModel) {
-        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(memberDomainModel.getAuthority().toString());
+    private UserDetails createUserDetails(Member member) {
+        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getAuthority().toString());
 
         return new User(
-                memberDomainModel.getEmail(),
-                memberDomainModel.getPassword(),
+                member.getEmail(),
+                member.getPassword(),
                 Collections.singleton(grantedAuthority)
         );
     }
