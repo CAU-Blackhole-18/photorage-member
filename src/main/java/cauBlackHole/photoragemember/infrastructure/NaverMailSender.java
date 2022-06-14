@@ -72,7 +72,7 @@ public class NaverMailSender {
         idx = (int) (special.length * Math.random());
         str.append(special[idx]);
 
-        for (int i = 3; i < 14; i++) {
+        for (int i = 3; i < 13; i++) {
             idx = (int) (charSet.length * Math.random());
             str.append(charSet[idx]);
         }

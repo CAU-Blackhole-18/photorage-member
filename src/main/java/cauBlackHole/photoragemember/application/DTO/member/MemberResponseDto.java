@@ -13,7 +13,7 @@ public class MemberResponseDto {
 
     private String nickname;
 
-    private MemberResponseDto(String id, String email, String name, String nickname){
+    public MemberResponseDto(String id, String email, String name, String nickname){
         this.id = id; this.email = email; this.name = name; this.nickname = nickname;
     }
 

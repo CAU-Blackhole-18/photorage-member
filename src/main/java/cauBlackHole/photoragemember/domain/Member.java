@@ -69,11 +69,18 @@ public class Member {
     }
 
     public Member updateNameAndNickname( MemberRequestUpdateDto memberRequestUpdateDto ){
-        if (memberRequestUpdateDto.getName() != null || "".equals(memberRequestUpdateDto.getName().trim())) {
-            this.name = memberRequestUpdateDto.getName();
+        if (memberRequestUpdateDto.getName() != null)
+        {
+            if(!("".equals(memberRequestUpdateDto.getName().trim())))
+            {
+                this.name = memberRequestUpdateDto.getName();
+            }
         }
-        if (memberRequestUpdateDto.getNickname() != null|| "".equals(memberRequestUpdateDto.getNickname().trim())) {
-            this.nickname = memberRequestUpdateDto.getNickname();
+        if (memberRequestUpdateDto.getNickname() != null)
+        {
+            if(!("".equals(memberRequestUpdateDto.getNickname().trim()))) {
+                this.nickname = memberRequestUpdateDto.getNickname();
+            }
         }
         return this;
     }
