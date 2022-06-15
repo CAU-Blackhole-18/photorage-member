@@ -21,15 +21,15 @@ public class AuthController {
 
     @PostMapping("/sign-up")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<MemberResponseDto> signUp(@RequestBody @Validated MemberRequestSignUpDto memberRequestDto) {
-        return ResponseEntity.ok(this.authService.signUp(memberRequestDto));
+    public MemberResponseDto signUp(@RequestBody @Validated MemberRequestSignUpDto memberRequestDto) {
+        return this.authService.signUp(memberRequestDto);
     }
 
     @PostMapping("/sign-in")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<JwtTokenDto> signIn(@RequestBody @Validated MemberRequestSignInDto memberRequestDto) {
+    public JwtTokenDto signIn(@RequestBody @Validated MemberRequestSignInDto memberRequestDto) {
 
-        return ResponseEntity.ok(this.authService.signIn(memberRequestDto));
+        return this.authService.signIn(memberRequestDto);
     }
 
     @PostMapping("/logout")
