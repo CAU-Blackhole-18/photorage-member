@@ -24,4 +24,4 @@ jwt:
 
 logging:
   level:
-    cauBlackHole.photoragemember: DEBUG
+    cauBlackHole.photoragemember: INFO

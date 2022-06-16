@@ -94,8 +94,7 @@ class MemberControllerSuperTest {
         perform.andExpect(status().isOk())
                 .andExpect(jsonPath("email").value(EMAIL))
                 .andExpect(jsonPath("name").value(NAME))
-                .andExpect(jsonPath("nickname").value(NICKNAME))
-                .andDo(print());
+                .andExpect(jsonPath("nickname").value(NICKNAME));
     }
     @Test
     @DisplayName("내 정보 조회 실패")
@@ -115,8 +114,7 @@ class MemberControllerSuperTest {
         //then
         perform.andExpect(status().isNotFound())
                 .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(NotFoundException.class))
-                .andExpect(result -> assertThat(result.getResolvedException().getMessage()).isEqualTo("로그인 유저 정보가 없습니다."))
-                .andDo(print());
+                .andExpect(result -> assertThat(result.getResolvedException().getMessage()).isEqualTo("로그인 유저 정보가 없습니다."));
     }
 
     @Test

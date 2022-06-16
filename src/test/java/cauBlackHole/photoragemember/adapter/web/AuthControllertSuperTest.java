@@ -103,8 +103,8 @@ class AuthControllertSuperTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("email").value(EMAIL))
                 .andExpect(jsonPath("name").value(NAME))
-                .andExpect(jsonPath("nickname").value(NICKNAME))
-                .andDo(print());
+                .andExpect(jsonPath("nickname").value(NICKNAME));
+
         Optional<Member> findMember = this.memberPort.findByEmail(EMAIL);
         assertThat(findMember.get()).isNotNull();
         assertThat(findMember.get().getEmail()).isEqualTo(EMAIL);
@@ -134,8 +134,7 @@ class AuthControllertSuperTest {
        perform
                .andExpect(status().isBadRequest())
                .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(BadRequestException.class))
-               .andExpect(result -> assertThat(result.getResolvedException().getMessage()).isEqualTo("중복되는 이메일 입니다."))
-               .andDo(print());
+               .andExpect(result -> assertThat(result.getResolvedException().getMessage()).isEqualTo("중복되는 이메일 입니다."));
     }
 
     @Test
@@ -169,8 +168,8 @@ class AuthControllertSuperTest {
                 .andExpect(jsonPath("accessTokenExpiresIn").exists())
                 .andExpect(jsonPath("accessTokenExpiresIn").isNumber())
                 .andExpect(jsonPath("refreshTokenExpiresIn").exists())
-                .andExpect(jsonPath("refreshTokenExpiresIn").isNumber())
-                .andDo(print());
+                .andExpect(jsonPath("refreshTokenExpiresIn").isNumber());
+
         assertThat(redisTemplate.hasKey("RT:" + "test@gmail.com")).isSameAs(true);
     }
 
