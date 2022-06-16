@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest(properties = "spring.config.location=classpath:application-localtest.yml")
+@SpringBootTest(properties = {"spring.config.location=classpath:application-localtest.yml", "spring.config.location=classpath:application-ci.yml"})
 @AutoConfigureMockMvc
 class AuthControllertTest {
 
