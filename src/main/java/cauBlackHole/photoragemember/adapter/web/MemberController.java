@@ -25,8 +25,8 @@ public class MemberController {
 
     @GetMapping("/me")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<MemberResponseDto> getMyMemberInfo() {
-        return ResponseEntity.ok(this.memberService.getMyInfo());
+    public MemberResponseDto getMyMemberInfo() {
+        return this.memberService.getMyInfo();
     }
 
     @GetMapping("/{name}")

@@ -8,6 +8,10 @@ application-local.yml
 application-jwt.yml
 application-test.yml
 application-prod.yml
+application-localtest.yml
+application.yml
+application.properties
+
 data.sql
 ### IntelliJ IDEA ###
 .idea

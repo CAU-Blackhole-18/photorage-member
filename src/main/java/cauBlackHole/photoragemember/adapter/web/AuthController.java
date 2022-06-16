@@ -39,8 +39,9 @@ public class AuthController {
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<JwtTokenDto> reissue(@RequestBody @Validated JwtTokenRequestReissueDto jwtTokenRequestDto) {
-        return ResponseEntity.ok(this.authService.reissue(jwtTokenRequestDto));
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public JwtTokenDto reissue(@RequestBody @Validated JwtTokenRequestReissueDto jwtTokenRequestDto) {
+        return this.authService.reissue(jwtTokenRequestDto);
     }
 
     @PostMapping("/password")

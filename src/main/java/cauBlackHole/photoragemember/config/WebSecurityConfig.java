@@ -68,8 +68,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // 세션을 사용하지 않기 때문에 STATELESS로 설정
                 .and()
+                .logout().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
 
                 // 로그인, 회원가입 API 는 토큰이 없는 상태에서 요청이 들어오기 때문에 permitAll 설정
                 .and()
