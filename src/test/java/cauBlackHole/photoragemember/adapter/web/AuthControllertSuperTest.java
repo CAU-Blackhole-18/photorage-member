@@ -20,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -36,9 +37,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest(properties = {"spring.config.location=classpath:application-localtest.yml", "spring.config.location=classpath:application-ci.yml"})
+@SpringBootTest
 @AutoConfigureMockMvc
-class AuthControllertTest {
+@ActiveProfiles({"localtest", "ci"})
+class AuthControllertSuperTest {
 
     private static final String EMAIL = "photorage@gmail.com";
     private static final String NAME = "KangWooSeok";
