@@ -42,7 +42,7 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
-          files: test-results/**/*.xml
+          files: build/test-results/**/*.xml
 
       # 전송할 파일을 담을 디렉토리 생성
       - name: Make Directory for deliver
