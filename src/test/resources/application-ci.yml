@@ -18,7 +18,6 @@ spring:
       mail.smtp.starttls.enable: true
 
 jwt:
-  header: Authorization
   secret: testjwtkeytestjwtkeytestjwtkeytestjwtkeytestjwtkeytestjwtkeytestjwtkeytestjwtkeytestjwtkeytestjwtkeytestjwtkeytestjwtkeytestjwtk
   token-validity-in-seconds: 1800
 
