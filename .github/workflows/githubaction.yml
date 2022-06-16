@@ -13,9 +13,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        redis-version: [6]
+    permissions:
+      checks: write
+      pull-requests: write
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
@@ -35,7 +35,7 @@ jobs:
       - name: Start Redis
         uses: supercharge/redis-github-action@1.1.0
         with:
-          redis-version: ${{ matrix.redis-version }}
+          redis-version: 6
 
       - name: Test with Gradle # test application build
         run: SPRING_PROFILES_ACTIVE=[ci] ./gradlew test
