@@ -1,10 +1,9 @@
-package cauBlackHole.photoragemember.domain;
+package cauBlackHole.photoragemember.domain.member;
 
 import cauBlackHole.photoragemember.application.DTO.member.MemberRequestFindPasswordDto;
 import cauBlackHole.photoragemember.application.DTO.member.MemberRequestUpdateDto;
 import cauBlackHole.photoragemember.config.exception.BadRequestException;
 import cauBlackHole.photoragemember.config.exception.ErrorCode;
-import cauBlackHole.photoragemember.config.exception.UnauthorizedException;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;

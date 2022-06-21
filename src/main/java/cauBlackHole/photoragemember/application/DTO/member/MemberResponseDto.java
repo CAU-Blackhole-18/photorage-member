@@ -1,6 +1,6 @@
 package cauBlackHole.photoragemember.application.DTO.member;
 
-import cauBlackHole.photoragemember.domain.Member;
+import cauBlackHole.photoragemember.domain.member.Member;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,4 +1,4 @@
-package cauBlackHole.photoragemember.domain;
+package cauBlackHole.photoragemember.domain.member;
 
 public enum Authority {
     ROLE_PAUSE,

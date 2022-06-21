@@ -3,7 +3,7 @@ package cauBlackHole.photoragemember.application.service;
 import cauBlackHole.photoragemember.application.port.outPort.MemberPort;
 import cauBlackHole.photoragemember.config.exception.ErrorCode;
 import cauBlackHole.photoragemember.config.exception.NotFoundException;
-import cauBlackHole.photoragemember.domain.Member;
+import cauBlackHole.photoragemember.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

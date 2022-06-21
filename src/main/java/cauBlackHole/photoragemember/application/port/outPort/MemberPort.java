@@ -1,6 +1,6 @@
 package cauBlackHole.photoragemember.application.port.outPort;
 
-import cauBlackHole.photoragemember.domain.Member;
+import cauBlackHole.photoragemember.domain.member.Member;
 
 import java.util.List;
 import java.util.Optional;

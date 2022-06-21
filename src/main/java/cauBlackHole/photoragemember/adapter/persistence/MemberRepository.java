@@ -1,6 +1,6 @@
 package cauBlackHole.photoragemember.adapter.persistence;
 
-import cauBlackHole.photoragemember.domain.Member;
+import cauBlackHole.photoragemember.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

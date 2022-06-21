@@ -2,7 +2,7 @@ package cauBlackHole.photoragemember.adapter.persistence;
 import cauBlackHole.photoragemember.application.port.outPort.MemberPort;
 import cauBlackHole.photoragemember.config.exception.ConflictException;
 import cauBlackHole.photoragemember.config.exception.ErrorCode;
-import cauBlackHole.photoragemember.domain.Member;
+import cauBlackHole.photoragemember.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

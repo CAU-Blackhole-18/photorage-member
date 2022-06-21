@@ -1,9 +1,9 @@
 package cauBlackHole.photoragemember.adapter.web;
 
-import cauBlackHole.photoragemember.application.DTO.member.MemberRequestFindPasswordDto;
-import cauBlackHole.photoragemember.application.DTO.member.MemberRequestUpdateDto;
-import cauBlackHole.photoragemember.application.DTO.member.MemberRequestUpdatePasswordDto;
-import cauBlackHole.photoragemember.application.DTO.member.MemberResponseDto;
+import cauBlackHole.photoragemember.application.DTO.jwt.JwtTokenDto;
+import cauBlackHole.photoragemember.application.DTO.jwt.JwtTokenRequestLogoutDto;
+import cauBlackHole.photoragemember.application.DTO.jwt.JwtTokenRequestReissueDto;
+import cauBlackHole.photoragemember.application.DTO.member.*;
 import cauBlackHole.photoragemember.application.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,5 +52,37 @@ public class MemberController {
     @ResponseStatus(value = HttpStatus.OK)
     public MemberResponseDto updatePassword(@RequestBody @Validated MemberRequestUpdatePasswordDto updatePasswordDto){
         return this.memberService.updatePassword(updatePasswordDto);
+    }
+
+    @PostMapping("/sign-up")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public MemberResponseDto signUp(@RequestBody @Validated MemberRequestSignUpDto memberRequestDto) {
+        return this.memberService.signUp(memberRequestDto);
+    }
+
+    @PostMapping("/sign-in")
+    @ResponseStatus(value = HttpStatus.OK)
+    public JwtTokenDto signIn(@RequestBody @Validated MemberRequestSignInDto memberRequestDto) {
+
+        return this.memberService.signIn(memberRequestDto);
+    }
+
+    @PostMapping("/logout")
+    @ResponseStatus(value = HttpStatus.OK)
+    public String logout(@RequestBody @Validated JwtTokenRequestLogoutDto jwtTokenRequestLogoutDto){
+        return this.memberService.logout(jwtTokenRequestLogoutDto);
+    }
+
+    @PostMapping("/reissue")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public JwtTokenDto reissue(@RequestBody @Validated JwtTokenRequestReissueDto jwtTokenRequestDto) {
+        return this.memberService.reissue(jwtTokenRequestDto);
+    }
+
+    @PostMapping("/password")
+    @ResponseStatus(value = HttpStatus.OK)
+    public String findPassword(@RequestBody @Validated MemberRequestFindPasswordDto findPasswordDto)
+    {
+        return this.memberService.findPassword(findPasswordDto);
     }
 }
