@@ -11,6 +11,7 @@ import cauBlackHole.photoragemember.config.jwt.JwtTokenProvider;
 import cauBlackHole.photoragemember.config.util.SecurityUtil;
 import cauBlackHole.photoragemember.domain.member.Authority;
 import cauBlackHole.photoragemember.domain.member.Member;
+import cauBlackHole.photoragemember.infrastructure.MailSender;
 import cauBlackHole.photoragemember.infrastructure.NaverMailSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -34,7 +35,7 @@ public class MemberService implements MemberServiceUseCase {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate<String, Object> redisTemplate;
-    private final NaverMailSender naverMailSender;
+    private final MailSender mailSender;
 
     // 현재 SecurityContext 에 있는 유저 정보 가져오기
     @Transactional(readOnly = true)
@@ -213,8 +214,7 @@ public class MemberService implements MemberServiceUseCase {
                 }
         );
         findMember.validateFindPassword(findPasswordDto);
-
-        naverMailSender.sendPassword(findMember);
+        findMember.sendPassword(mailSender);
 
         return "이메일로 임시 비밀번호를 보냈습니다.";
     }

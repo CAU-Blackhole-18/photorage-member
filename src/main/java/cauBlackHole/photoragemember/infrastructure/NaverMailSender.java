@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class NaverMailSender {
+public class NaverMailSender implements MailSender{
 
     private final JavaMailSender javaMailSender;
     private final MemberPort memberPort;
@@ -25,6 +25,7 @@ public class NaverMailSender {
     @Value("${spring.mail.username}")
     private String sender;
 
+    @Override
     public void sendPassword(Member member){
 
         log.info("임시 비밀번호 발급 시작");
@@ -47,7 +48,9 @@ public class NaverMailSender {
         javaMailSender.send(message);
         log.info("임시 비밀번호 발급 완료");
     }
+
     //임시 비밀번호 발급
+    @Override
     public String getTempPassword(){
         char[] charSet = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
                 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',

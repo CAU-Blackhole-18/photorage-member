@@ -4,11 +4,13 @@ import cauBlackHole.photoragemember.application.DTO.member.MemberRequestFindPass
 import cauBlackHole.photoragemember.application.DTO.member.MemberRequestUpdateDto;
 import cauBlackHole.photoragemember.config.exception.BadRequestException;
 import cauBlackHole.photoragemember.config.exception.ErrorCode;
+import cauBlackHole.photoragemember.infrastructure.MailSender;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
@@ -105,6 +107,10 @@ public class Member {
         {
             throw new BadRequestException(ErrorCode.INVALID_NICKNAME, "닉네임이 틀렸습니다.");
         }
+    }
+
+    public void sendPassword(MailSender mailSender){
+        mailSender.sendPassword(this);
     }
 
     public static Member createMember(String email, String password, String name, String nickname, Authority authority){
